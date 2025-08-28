@@ -1,0 +1,18 @@
+<!-- templates/caisse.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Caisse</title>
+</head>
+<body>
+    <h1>État de la Caisse</h1>
+    <p><strong>Montant actuel :</strong> {{ caisse }} €</p>
+
+    <h2>Responsable de la cafet</h2>
+    <p>{{ responsable.prenom }} {{ responsable.nom }}</p>
+
+    <a href="{{ url_for('responsable') }}">Changer de responsable</a><br>
+    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Changer le statut</title>
+</head>
+<body>
+    <h1>Changer le statut d'une personne</h1>
+    
+    <form method="POST">
+        <label for="personne">Personne :</label>
+        <select name="personne" id="personne" required>
+            <option value="">Sélectionner une personne</option>
+            {% for personne in personnes %}
+                <option value="{{ personne.prenom }}|{{ personne.nom }}">
+                    {{ personne.prenom }} {{ personne.nom }} ({{ personne.statut }})
+                </option>
+            {% endfor %}
+        </select>
+        
+        <br><br>
+        
+        <label for="statut">Nouveau statut :</label>
+        <select name="statut" id="statut" required>
+            <option value="">Sélectionner un statut</option>
+            <option value="permanent">Permanent</option>
+            <option value="stagiaire">Stagiaire</option>
+            <option value="non-permanent">Non-permanent</option>
+        </select>
+        
+        <br><br>
+        
+        <button type="submit">Changer le statut</button>
+    </form>
+    
+    <br>
+    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+</body>
+</html>

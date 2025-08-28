@@ -1,0 +1,10 @@
+[
+    {
+      "date": "2025-07-10 14:25",
+      "responsable": {"prenom": "Valentin", "nom": "Jules"},
+      "quantite": 2.0,
+      "prix": 30.0,
+      "paiement": "liquide"
+    }
+  ]
+  

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des dettes</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .positif {
+            color: red;
+        }
+        .negatif {
+            color: green;
+        }
+        .neutre {
+            color : grey;
+        }
+        .bouton {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .bouton:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Liste des dettes</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Dette (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for infos in personnes %}
+            <tr>
+                <td>{{ infos['nom'] }}</td>
+                <td>{{ infos['prenom'] }}</td>
+                <td class="{{ 'negatif' if infos['dette'] <= 0  else 'positif' }}">
+                    {{ '%.2f'|format(infos['dette']) }} €
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form action="{{ url_for('exporter_pdf') }}" method="get">
+        <button class="bouton">📄 Générer le PDF</button>
+    </form>
+    <a href="{{ url_for('index') }}">Retour</a>
+</body>
+</html>

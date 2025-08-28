@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Payer une dette</title>
+</head>
+<body>
+    <h1>Payer une dette</h1>
+
+    <form method="post">
+        <label for="personne">Sélectionner la personne :</label>
+        <select name="personne" id="personne" required>
+            {% for personne in personnes %}
+                <option value="{{ personne.prenom }}|{{ personne.nom }}">
+                    {{ personne.prenom }} {{ personne.nom }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+
+        <label for="montant">Montant payé (€) :</label>
+        <input type="number" name="montant" id="montant" step="0.01" required>
+
+        <br><br>
+
+        <label for="moyen">Moyen de paiement :</label>
+        <select name="moyen" id="moyen" required>
+            <option value="liquide">Liquide</option>
+            <option value="virement">Virement</option>
+        </select>
+
+        <br><br>
+        <button type="submit">Valider le paiement</button>
+    </form>
+
+    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+</body>
+</html>

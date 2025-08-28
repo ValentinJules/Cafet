@@ -1,0 +1,27 @@
+<!-- templates/responsable.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Changer de Responsable</title>
+</head>
+<body>
+    <h1>Changer le Responsable de la Cafet</h1>
+
+    <form method="post">
+        <label for="responsable">Choisir un·e nouveau·elle responsable :</label>
+        <select id="responsable" name="responsable" required>
+            {% for personne in personnes %}
+                <option value="{{ personne.prenom }}|{{ personne.nom }}">
+                    {{ personne.prenom }} {{ personne.nom }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <br><br>
+        <button type="submit">Changer</button>
+    </form>
+
+    <a href="{{ url_for('index') }}">Retour</a>
+</body>
+</html>

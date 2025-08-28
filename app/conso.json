@@ -1,0 +1,18 @@
+{
+  "personnes": [
+    {
+      "nom": "Jules",
+      "prenom": "Valentin",
+      "cafes": 2,
+      "statut": "permanent",
+      "dette": 6.96
+    },
+    {
+      "nom": "test",
+      "prenom": "test",
+      "cafes": 18,
+      "statut": "doctorant",
+      "dette": 2.49
+    }
+  ]
+}

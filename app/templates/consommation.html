@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Consommation collective</title>
+</head>
+<body>
+    <h1>Ajouter des cafés consommés</h1>
+
+    <form method="post">
+        <table border="1" cellpadding="6" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Cafés consommés à ajouter</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for personne in personnes %}
+                    <tr>
+                        <td>{{ personne.prenom }}</td>
+                        <td>{{ personne.nom }}</td>
+                        <td>
+                            <input type="number" name="cafes_{{ loop.index0 }}" min="0" value="0">
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <br>
+        <button type="submit">Valider les consommations</button>
+    </form>
+
+    <br>
+    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+</body>
+</html>

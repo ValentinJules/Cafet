@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ajouter une personne</title>
+</head>
+<body>
+    <h1>Ajouter une nouvelle personne</h1>
+    
+    <form method="POST">
+        <label for="prenom">Prénom :</label>
+        <input type="text" name="prenom" id="prenom" required>
+        
+        <br><br>
+        
+        <label for="nom">Nom :</label>
+        <input type="text" name="nom" id="nom" required>
+        
+        <br><br>
+        
+        <label for="statut">Statut :</label>
+        <select name="statut" id="statut" required>
+            <option value="">Sélectionner un statut</option>
+            <option value="permanent">Permanent</option>
+            <option value="stagiaire">Stagiaire</option>
+            <option value="non-permanent">Non-permanent</option>
+        </select>
+        
+        <br><br>
+        
+        <button type="submit">Ajouter</button>
+    </form>
+    
+    <br>
+    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
+</body>
+</html>

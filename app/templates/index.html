@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil - Cafèt</title>
+    <style>
+        .button {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1> gestion de la cafèt ☕</h1>
+    <h2>Informations</h2>
+    <ul>
+        <li><strong>Responsable :</strong> {{ responsable.prenom }} {{ responsable.nom }}</li>
+        <li><strong>Argent dans la caisse :</strong> {{ caisse }} €</li>
+        <li><a href="{{ url_for('historique') }}">Voir l'historique des achats</a></li>
+    </ul>
+    <h2>Actions disponibles</h2>
+    <a href="{{ url_for('ajouter') }}" class="button">➕ Ajouter une personne</a><br>
+    <a href="{{ url_for('changer_statut') }}" class="button">🔄 Changer le statut</a><br>
+    <a href="{{ url_for('supprimer') }}" class="button">❌ Supprimer une personne</a><br>
+    <a href="{{ url_for('acheter') }}" class="button">☕ Achat de café</a><br>
+    <a href="{{ url_for('consommation') }}" class="button">☕ Mettre à jour les conso</a><br>
+    <a href="{{ url_for('payer') }}" class="button">💰 Payer une dette</a><br>
+    <a href="{{ url_for('dettes') }}" class="button">📋 Afficher les dettes</a><br>
+    <a href="{{ url_for('responsable') }}" class="button">👤 Changer le responsable</a><br>
+
+    
+</body>
+</html>

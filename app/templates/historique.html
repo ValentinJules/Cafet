@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Historique des achats</title>
+</head>
+<body>
+    <h1>Historique des achats de café</h1>
+    <table border="1">
+        <tr>
+            <th>Date</th>
+            <th>Responsable</th>
+            <th>Quantité (kg)</th>
+            <th>Prix (€)</th>
+            <th>Paiement</th>
+        </tr>
+        {% for achat in achats %}
+        <tr>
+            <td>{{ achat.date }}</td>
+            <td>{{ achat.responsable.prenom }} {{ achat.responsable.nom }}</td>
+            <td>{{ achat.quantite }}</td>
+            <td>{{ achat.prix }}</td>
+            <td>{{ achat.paiement }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <p><a href="{{ url_for('index') }}">Retour à l'accueil</a></p>
+</body>
+</html>

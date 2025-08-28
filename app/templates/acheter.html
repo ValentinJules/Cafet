@@ -1,0 +1,15 @@
+<form method="post">
+  <label>Quantité achetée (kg) :
+    <input type="number" name="quantite" step="0.01" required>
+  </label>
+  <br>
+  <label>Prix payé (€) :
+    <input type="number" name="prix" step="0.01" required>
+  </label>
+  <br>
+  <label>Moyen de paiement :</label><br>
+  <input type="radio" name="paiement" value="liquide" required> Liquide<br>
+  <input type="radio" name="paiement" value="carte"> Carte<br>
+  <br>
+  <button type="submit">Enregistrer l'achat</button>
+</form>
