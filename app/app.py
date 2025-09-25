@@ -105,7 +105,7 @@ def consommation():
                 try:
                     nb_cafes = int(nb)
                     if nb_cafes > 0:
-                        personne["cafes"] += nb_cafes
+                        personne["cafes"] = nb_cafes
                         
                         # Appliquer le prix réduit pour les stagiaires
                         if personne.get("statut") == "stagiaire":
@@ -236,7 +236,7 @@ def exporter_pdf():
     personnes = data.get("personnes", [])
     
     # Filtrer celles avec une dette positive (>0)
-    dettes_positives = [p for p in personnes if p["dette"] > 1]
+    dettes_positives = [p for p in personnes if p["dette"] > 1 and p.get("statut") != "inactif"]
 
     # Création du PDF en mémoire
     buffer = io.BytesIO()
@@ -411,6 +411,23 @@ def historique():
         achats = []
 
     return render_template('historique.html', achats=achats)
+
+
+
+@app.route("/trier_liste")
+def trier_liste():
+    donnees = charger_donnees()
+    personnes = donnees["personnes"]
+    
+    # Trier les personnes par nom (puis par prénom en cas d'égalité)
+    personnes_triees = sorted(personnes, key=lambda x: (x["nom"].lower(), x["prenom"].lower()))
+    
+    # Mettre à jour les données avec la liste triée
+    donnees["personnes"] = personnes_triees
+    enregistrer_donnees(donnees)
+    
+    return redirect(url_for("index"))
+
 
 
 if __name__ == "__main__":
