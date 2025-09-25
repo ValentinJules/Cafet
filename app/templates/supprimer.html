@@ -11,8 +11,8 @@
         <label for="personne">Sélectionner la personne :</label>
         <select name="personne" id="personne" required>
             {% for personne in personnes %}
-                <option value="{{ personne.prenom }}|{{ personne.nom }}">
-                    {{ personne.prenom }} {{ personne.nom }}
+                <option value="{{ personne.nom }}|{{ personne.prenom }}">
+                    {{ personne.nom }} {{ personne.prenom }}
                 </option>
             {% endfor %}
         </select>

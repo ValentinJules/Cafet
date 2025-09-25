@@ -11,8 +11,8 @@
         <select name="personne" id="personne" required>
             <option value="">Sélectionner une personne</option>
             {% for personne in personnes %}
-                <option value="{{ personne.prenom }}|{{ personne.nom }}">
-                    {{ personne.prenom }} {{ personne.nom }} ({{ personne.statut }})
+                <option value="{{ personne.nom }}|{{ personne.prenom }}">
+                    {{ personne.nom }} {{ personne.prenom }} ({{ personne.statut }})
                 </option>
             {% endfor %}
         </select>
@@ -25,6 +25,7 @@
             <option value="permanent">Permanent</option>
             <option value="stagiaire">Stagiaire</option>
             <option value="non-permanent">Non-permanent</option>
+            <option value="inactif">Inactif</option>
         </select>
         
         <br><br>

@@ -12,7 +12,7 @@
         <label for="responsable">Choisir un·e nouveau·elle responsable :</label>
         <select id="responsable" name="responsable" required>
             {% for personne in personnes %}
-                <option value="{{ personne.prenom }}|{{ personne.nom }}">
+                <option value="{{ personne.nom }}|{{ personne.prenom }}">
                     {{ personne.prenom }} {{ personne.nom }}
                 </option>
             {% endfor %}

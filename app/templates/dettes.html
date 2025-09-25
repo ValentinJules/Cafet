@@ -56,6 +56,7 @@
             <tr>
                 <th>Nom</th>
                 <th>Prénom</th>
+                <th>Statut</th>
                 <th>Dette (€)</th>
             </tr>
         </thead>
@@ -64,6 +65,7 @@
             <tr>
                 <td>{{ infos['nom'] }}</td>
                 <td>{{ infos['prenom'] }}</td>
+                <td>{{ infos['statut'] }}</td>
                 <td class="{{ 'negatif' if infos['dette'] <= 0  else 'positif' }}">
                     {{ '%.2f'|format(infos['dette']) }} €
                 </td>
