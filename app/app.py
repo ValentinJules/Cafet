@@ -52,7 +52,7 @@ def charger_caisse():
         return {
             "responsable": {"prenom": "Prénom", "nom": "Nom"},
             "caisse": 0,
-            "prix_par_cafe": 0.5
+            "prix_par_cafe": 0.3
         }
 
 def enregistrer_caisse(donnees):
@@ -214,42 +214,68 @@ def changer_statut():
 
 @app.route('/payer', methods=['GET', 'POST'])
 def payer():
-    donnees = charger_donnees()
+    donnees_conso = charger_donnees()  # conso.json
+    donnees_caisse = charger_caisse()  # caisse.json
 
     if request.method == 'POST':
-        prenom, nom = request.form['personne'].split('|')
-        montant = float(request.form['montant'])
-        moyen = request.form['moyen']
+        try:
+            personne_str = request.form['personne']
+            montant = float(request.form['montant'])
+            moyen = request.form['moyen']
+            
+            # Séparer le nom et prénom
+            prenom, nom = personne_str.split('|')
+            
+            # Mise à jour de la dette de la personne dans conso.json
+            personne_trouvee = False
+            for p in donnees_conso['personnes']:
+                if p['prenom'] == prenom and p['nom'] == nom:
+                    ancienne_dette = p['dette']
+                    p['dette'] -= montant
+                    p['dette'] = round(p['dette'], 2)  # Arrondir à 2 décimales
+                    personne_trouvee = True
+                    print(f"Dette de {prenom} {nom} : {ancienne_dette} -> {p['dette']}")  # Debug
+                    break
+            
+            if not personne_trouvee:
+                return "Personne non trouvée", 400
 
-        # Mise à jour de la dette de la personne
-        for p in donnees['personnes']:
-            if p['prenom'] == prenom and p['nom'] == nom:
-                p['dette'] -= montant
-                break
+            # Gestion du paiement selon le moyen
+            if moyen == 'liquide':
+                # Ajouter à la caisse
+                donnees_caisse['caisse'] += montant
+                donnees_caisse['caisse'] = round(donnees_caisse['caisse'], 2)
+                print(f"Caisse : {donnees_caisse['caisse']}")  # Debug
+                
+            elif moyen == 'virement':
+                # Transférer la dette au responsable
+                responsable = donnees_caisse.get('responsable')
+                if responsable:
+                    responsable_trouve = False
+                    for p in donnees_conso['personnes']:
+                        if (p['prenom'] == responsable['prenom'] and 
+                            p['nom'] == responsable['nom']):
+                            p['dette'] += montant
+                            p['dette'] = round(p['dette'], 2)
+                            responsable_trouve = True
+                            print(f"Dette responsable {responsable['prenom']} {responsable['nom']} : {p['dette']}")  # Debug
+                            break
+                    
+                    if not responsable_trouve:
+                        return "Responsable non trouvé dans la liste", 400
 
-        # Charger caisse.json
-        with open('caisse.json', 'r') as f:
-            caisse_data = json.load(f)
+            # Enregistrer les changements
+            enregistrer_donnees(donnees_conso)  # Sauvegarde conso.json
+            enregistrer_caisse(donnees_caisse)   # Sauvegarde caisse.json
+            
+            return redirect(url_for('index'))
 
-        if moyen == 'liquide':
-            caisse_data['caisse'] += montant
-        elif moyen == 'virement':
-            responsable = caisse_data.get('responsable')
-            if responsable:
-                for p in donnees['personnes']:
-                    if p['prenom'] == responsable['prenom'] and p['nom'] == responsable['nom']:
-                        p['dette'] += montant
-                        break
+        except Exception as e:
+            print(f"Erreur lors du paiement: {e}")  # Debug
+            return f"Erreur: {e}", 400
 
-        # Enregistrer les changements
-        enregistrer_donnees(donnees)
-        with open('caisse.json', 'w') as f:
-            json.dump(caisse_data, f, indent=4)
-
-        return redirect(url_for('index'))
-
-    return render_template('payer.html', personnes=donnees['personnes'])
-
+    # Afficher TOUTES les personnes (même celles sans dette pour paiement en avance)
+    return render_template('payer.html', personnes=donnees_conso['personnes'])
 
 @app.route("/exporter_pdf")
 def exporter_pdf():
