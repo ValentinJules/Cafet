@@ -1,36 +1,103 @@
 {% extends "base.html" %}
 
-{% block title %}Payer une dette{% endblock %}
+{% block title %}Payer - Cafèt{% endblock %}
+{% block header %}Enregistrer un paiement{% endblock %}
 {% block subtitle %}{% endblock %}
 
 {% block content %}
-    <form method="post">
-        <label for="personne">Sélectionner la personne :</label>
-        <select name="personne" id="personne" required>
-            {% for personne in personnes %}
-                <option value="{{ personne.nom }}|{{ personne.prenom }}">
-                    {{ personne.nom }} {{ personne.prenom }}
-                </option>
-            {% endfor %}
-        </select>
-
-        <br><br>
-
-        <label for="montant">Montant payé (€) :</label>
-        <input type="number" name="montant" id="montant" step="0.01" required>
-
-        <br><br>
-
-        <label for="moyen">Moyen de paiement :</label>
-        <select name="moyen" id="moyen" required>
-            <option value="liquide">Liquide</option>
-            <option value="virement">Virement</option>
-        </select>
-
-        <br><br>
-        <button type="submit">Valider le paiement</button>
+<div class="form-container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="personne">Personne :</label>
+            <select name="personne" id="personne" required>
+                <option value="">Sélectionner une personne</option>
+                {% for personne in personnes %}
+                    <option value="{{ personne.prenom }}|{{ personne.nom }}" data-dette="{{ personne.dette }}">
+                        {{ personne.prenom }} {{ personne.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="montant">Montant à payer :</label>
+            <input type="number" name="montant" id="montant" step="0.01" min="0.01" required>
+            <small>
+                <span id="dette_info">
+                    Solde actuel : <span id="solde_actuel">0.00</span> €
+                </span>
+                <br>
+                <span style="color: #666; font-size: 0.8em;">
+                    💡 Vous pouvez payer en avance même si le solde est créditeur
+                </span>
+            </small>
+        </div>
+        
+        <div class="form-group">
+            <label>Moyen de paiement :</label>
+            <div style="margin-top: 10px;">
+                <label style="display: block; margin: 8px 0; cursor: pointer;">
+                    <input type="radio" name="moyen" value="liquide" required style="margin-right: 8px;">
+                    💵 Liquide
+                </label>
+                <label style="display: block; margin: 8px 0; cursor: pointer;">
+                    <input type="radio" name="moyen" value="virement" style="margin-right: 8px;">
+                    💳 Virement
+                </label>
+            </div>
+        </div>
+        
+        <button type="submit" class="button">
+            <span class="button-icon">💰</span>Enregistrer le paiement
+        </button>
     </form>
-
+    
     <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const personneSelect = document.getElementById('personne');
+    const soldeActuelSpan = document.getElementById('solde_actuel');
+    const detteInfoSpan = document.getElementById('dette_info');
+    const montantInput = document.getElementById('montant');
+    
+    personneSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const dette = parseFloat(selectedOption.getAttribute('data-dette'));
+        
+        // Afficher le solde actuel (positif pour dette, négatif pour crédit)
+        soldeActuelSpan.textContent = dette.toFixed(2);
+        
+        // Changer la couleur selon le solde
+        if (dette > 0) {
+            soldeActuelSpan.style.color = '#dc3545'; // Rouge pour dette
+            detteInfoSpan.innerHTML = 'Dette actuelle : <span id="solde_actuel">' + dette.toFixed(2) + '</span> €';
+        } else if (dette < 0) {
+            soldeActuelSpan.style.color = '#28a745'; // Vert pour crédit
+            const credit = -dette;
+            detteInfoSpan.innerHTML = 'Crédit actuel : <span id="solde_actuel">' + credit.toFixed(2) + '</span> €';
+        } else {
+            soldeActuelSpan.style.color = '#666'; // Gris pour solde nul
+            detteInfoSpan.innerHTML = 'Solde actuel : <span id="solde_actuel">0.00</span> €';
+        }
+    });
+});
+</script>
+
+<style>
+.form-group small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+}
+
+#solde_actuel {
+    font-weight: bold;
+}
+</style>
 {% endblock %}
