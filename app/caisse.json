@@ -1,8 +1,9 @@
 {
     "responsable": {
-        "prenom": "Valentin",
-        "nom": "Jules"
+        "prenom": "Jules",
+        "nom": "Valentin"
     },
-    "caisse": 51.9,
-    "stock": 11.0
+    "caisse": 87.5,
+    "stock": 11.0,
+    "prix_par_cafe": 0.3
 }

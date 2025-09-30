@@ -15,22 +15,23 @@ FICHIER_JSON = "./conso.json"
 
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    # Charger les infos de la caisse
-    with open('caisse.json', 'r', encoding='utf-8') as f:
-        caisse_data = json.load(f)
-
-    stock = caisse_data.get('stock', 0)
-    caisse = caisse_data.get('caisse', 0)
-    responsable = caisse_data.get('responsable', {})
-
-    return render_template(
-        'index.html',
-        stock=stock,
-        caisse=caisse,
-        responsable=responsable
-    )
+    # Charger les données des personnes
+    donnees_conso = charger_donnees()  # conso.json
+    personnes = donnees_conso["personnes"]
+    
+    # Charger les données de la caisse
+    donnees_caisse = charger_caisse()  # caisse.json
+    responsable = donnees_caisse["responsable"]
+    caisse = donnees_caisse["caisse"]
+    prix_cafe = donnees_caisse["prix_par_cafe"]
+    
+    return render_template("index.html", 
+                         personnes=personnes, 
+                         responsable=responsable, 
+                         caisse=caisse,
+                         prix_cafe=prix_cafe)
 
 
 def charger_donnees():
@@ -41,7 +42,21 @@ def enregistrer_donnees(donnees):
     with open(FICHIER_JSON, "w", encoding="utf-8") as f:
         json.dump(donnees, f, indent=2, ensure_ascii=False)
 
+def charger_caisse():
+    try:
+        with open("caisse.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        # Fichier par défaut si inexistant
+        return {
+            "responsable": {"prenom": "Prénom", "nom": "Nom"},
+            "caisse": 0,
+            "prix_par_cafe": 0.5
+        }
 
+def enregistrer_caisse(donnees):
+    with open("caisse.json", "w", encoding="utf-8") as f:
+        json.dump(donnees, f, ensure_ascii=False, indent=4)
 
 @app.route("/ajouter", methods=["GET", "POST"])
 def ajouter():
@@ -94,8 +109,10 @@ def supprimer():
 
 @app.route("/consommation", methods=["GET", "POST"])
 def consommation():
-    donnees = charger_donnees()
-    personnes = donnees["personnes"]
+    donnees_conso = charger_donnees()
+    donnees_caisse = charger_caisse()
+    personnes = donnees_conso["personnes"]
+    prix_cafe = donnees_caisse["prix_par_cafe"]
 
     if request.method == "POST":
         for i, personne in enumerate(personnes):
@@ -122,11 +139,16 @@ def consommation():
 
     return render_template("consommation.html", personnes=personnes)
 
+
 @app.route("/dettes")
 def dettes():
-    data = charger_donnees()
-    personnes = data.get("personnes", [])  
-    return render_template("dettes.html", personnes=personnes)
+    donnees = charger_donnees()
+    personnes = donnees["personnes"]
+    # Trier par dette décroissante
+    personnes_triees = sorted(personnes, key=lambda x: x["dette"], reverse=True)
+    return render_template("dettes.html", personnes=personnes_triees)
+
+
 
 @app.route("/caisse")
 def page_caisse():
@@ -427,6 +449,29 @@ def trier_liste():
     enregistrer_donnees(donnees)
     
     return redirect(url_for("index"))
+
+
+@app.route("/changer_prix", methods=["GET", "POST"])
+def changer_prix():
+    donnees_caisse = charger_caisse()  # Charger depuis caisse.json
+    
+    if request.method == "POST":
+        nouveau_prix = request.form.get("prix_cafe")
+        
+        if nouveau_prix:
+            try:
+                prix_float = float(nouveau_prix)
+                if prix_float > 0:
+                    donnees_caisse["prix_par_cafe"] = prix_float
+                    enregistrer_caisse(donnees_caisse)  # Sauvegarder dans caisse.json
+                    return redirect(url_for("index"))
+                else:
+                    return render_template("changer_prix.html", error="Le prix doit être supérieur à 0")
+            except ValueError:
+                return render_template("changer_prix.html", error="Veuillez entrer un prix valide")
+    
+    return render_template("changer_prix.html", prix_actuel=donnees_caisse["prix_par_cafe"])
+
 
 
 

@@ -1,0 +1,396 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+header {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    opacity: 0.9;
+}
+
+.coffee-icon {
+    font-size: 2em;
+    margin-right: 15px;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-left: 4px solid #8B4513;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 8px;
+}
+
+.info-card h2 {
+    color: #8B4513;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.info-card h2::before {
+    content: "📊";
+    margin-right: 10px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-item:last-child {
+    border-bottom: none;
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.action-card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.button {
+    display: inline-block;
+    padding: 12px 25px;
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+}
+
+.button:hover {
+    background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+    box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+}
+
+.button-icon {
+    font-size: 1.5em;
+    margin-right: 10px;
+}
+
+.action-description {
+    margin-top: 10px;
+    color: #6c757d;
+    font-size: 0.9em;
+}
+
+.history-link {
+    display: inline-block;
+    margin-top: 15px;
+    color: #8B4513;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.history-link:hover {
+    color: #A0522D;
+    text-decoration: underline;
+}
+
+/* Styles pour les formulaires */
+.form-container {
+    padding: 30px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #8B4513;
+}
+
+.error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    font-weight: 600;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px 0;
+    font-weight: 600;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #8B4513;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 2px solid #8B4513;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background-color: #8B4513;
+    color: white;
+}
+
+
+/* Style amélioré pour les boutons radio */
+input[type="radio"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+.form-group label {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.form-group label:hover {
+    background-color: #f8f9fa;
+}
+
+/* Styles pour le tableau des dettes */
+.table-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.dettes-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dettes-table th {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.dettes-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+    transition: background-color 0.3s ease;
+}
+
+.dettes-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.dettes-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Styles pour les badges de statut */
+.statut-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8em;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.statut-permanent {
+    background-color: #e7f3ff;
+    color: #0066cc;
+    border: 1px solid #b3d9ff;
+}
+
+.statut-stagiaire {
+    background-color: #fff0e6;
+    color: #cc6600;
+    border: 1px solid #ffd9b3;
+}
+
+.statut-non-permanent {
+    background-color: #f0f0f0;
+    color: #666666;
+    border: 1px solid #d9d9d9;
+}
+
+.statut-inactif {
+    background-color: #ffe6e6;
+    color: #cc0000;
+    border: 1px solid #ffb3b3;
+}
+
+/* Styles pour les dettes */
+.dette-positif {
+    color: #dc3545;
+    font-weight: 600;
+    text-align: right;
+}
+
+.dette-negatif {
+    color: #28a745;
+    font-weight: 600;
+    text-align: right;
+}
+
+.dette-total {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    font-size: 1.1em;
+    color: #8B4513;
+    text-align: right;
+    border-top: 2px solid #8B4513;
+}
+
+/* Pied de tableau */
+.dettes-table tfoot {
+    background-color: #f8f9fa;
+}
+
+.dettes-table tfoot td {
+    font-weight: bold;
+    padding: 15px;
+}
+/* Styles pour le tri interactif */
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    position: relative;
+    padding-right: 30px !important;
+}
+
+.sortable:hover {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.sort-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.9em;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.sortable:hover .sort-indicator {
+    opacity: 1;
+}
+
+/* Animation pour le tri */
+.dettes-table tbody tr {
+    transition: transform 0.3s ease;
+}
+
+.dettes-table.sorting tbody tr {
+    opacity: 0.5;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .dettes-table {
+        font-size: 0.9em;
+    }
+    
+    .dettes-table th,
+    .dettes-table td {
+        padding: 8px 10px;
+    }
+    
+    .statut-badge {
+        font-size: 0.7em;
+        padding: 3px 8px;
+    }
+}
+@media (max-width: 768px) {
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    .container {
+        margin: 10px;
+    }
+}

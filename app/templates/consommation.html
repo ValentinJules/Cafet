@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Consommation collective</title>
-</head>
-<body>
-    <h1>Ajouter des cafés consommés</h1>
+{% extends "base.html" %}
 
+{% block title %}Consommation collective{% endblock %}
+{% block header %}Ajouter des cafés consommés{% endblock %}
+{% block subtitle %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    
     <form method="post">
         <table border="1" cellpadding="6" cellspacing="0">
             <thead>
@@ -34,6 +37,6 @@
     </form>
 
     <br>
-    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
-</body>
-</html>
+    <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
+</div>
+{% endblock %}

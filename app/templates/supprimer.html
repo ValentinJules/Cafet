@@ -1,27 +1,33 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Supprimer une personne</title>
-</head>
-<body>
-    <h1>Supprimer une personne</h1>
+{% extends "base.html" %}
 
-    <form method="post">
-        <label for="personne">Sélectionner la personne :</label>
-        <select name="personne" id="personne" required>
-            {% for personne in personnes %}
-                <option value="{{ personne.nom }}|{{ personne.prenom }}">
-                    {{ personne.nom }} {{ personne.prenom }}
-                </option>
-            {% endfor %}
-        </select>
+{% block title %}Supprimer une personne - Cafèt{% endblock %}
+{% block header %}Supprimer une personne{% endblock %}
+{% block subtitle %}{% endblock %}
 
-        <br><br>
-
-        <button type="submit">Supprimer</button>
+{% block content %}
+<div class="form-container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="personne">Personne à supprimer :</label>
+            <select name="personne" id="personne" required>
+                <option value="">Sélectionner une personne</option>
+                {% for personne in personnes %}
+                    <option value="{{ personne.prenom }}|{{ personne.nom }}">
+                        {{ personne.prenom }} {{ personne.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button type="submit" class="button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette personne ?')">
+            <span class="button-icon">❌</span>Supprimer la personne
+        </button>
     </form>
-
-    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
-</body>
-</html>
+    
+    <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
+</div>
+{% endblock %}

@@ -5,6 +5,13 @@
       "quantite": 2.0,
       "prix": 30.0,
       "paiement": "liquide"
+    },
+    {
+      "date": "2025-09-10 14:25",
+      "responsable": {"prenom": "Valentin", "nom": "Jules"},
+      "quantite": 4.0,
+      "prix": 60.0,
+      "paiement": "liquide"
     }
   ]
   

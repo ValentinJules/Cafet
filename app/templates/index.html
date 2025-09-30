@@ -165,6 +165,7 @@
             <p class="subtitle">Système de gestion des consommations de café</p>
         </header>
         
+
         <div class="info-card">
             <h2>Informations générales</h2>
             <div class="info-item">
@@ -175,11 +176,14 @@
                 <span><strong>Argent dans la caisse :</strong></span>
                 <span>{{ caisse }} €</span>
             </div>
+            <div class="info-item">
+                <span><strong>Prix du café :</strong></span>
+                <span>{{ prix_cafe }} €</span>
+            </div>
             <a href="{{ url_for('historique') }}" class="history-link">
                 📈 Voir l'historique complet des achats
             </a>
-        </div>
-        
+        </div>        
         <div class="actions-grid">
             <div class="action-card">
                 <a href="{{ url_for('ajouter') }}" class="button">
@@ -248,6 +252,12 @@
                     <span class="button-icon">🔤</span>Trier par nom
                 </a>
                 <p class="action-description">Classer alphabétiquement par nom</p>
+            </div>
+            <div class="action-card">
+                <a href="{{ url_for('changer_prix') }}" class="button">
+                    <span class="button-icon">💰</span>Changer prix café
+                </a>
+                <p class="action-description">Modifier le prix unitaire du café</p>
             </div>
         </div>
     </div>

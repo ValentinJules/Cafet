@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Payer une dette</title>
-</head>
-<body>
-    <h1>Payer une dette</h1>
+{% extends "base.html" %}
 
+{% block title %}Payer une dette{% endblock %}
+{% block subtitle %}{% endblock %}
+
+{% block content %}
     <form method="post">
         <label for="personne">Sélectionner la personne :</label>
         <select name="personne" id="personne" required>
@@ -34,6 +31,6 @@
         <button type="submit">Valider le paiement</button>
     </form>
 
-    <a href="{{ url_for('index') }}">Retour à l'accueil</a>
-</body>
-</html>
+    <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
+</div>
+{% endblock %}

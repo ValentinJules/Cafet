@@ -1,15 +1,45 @@
-<form method="post">
-  <label>Quantité achetée (kg) :
-    <input type="number" name="quantite" step="0.01" required>
-  </label>
-  <br>
-  <label>Prix payé (€) :
-    <input type="number" name="prix" step="0.01" required>
-  </label>
-  <br>
-  <label>Moyen de paiement :</label><br>
-  <input type="radio" name="paiement" value="liquide" required> Liquide<br>
-  <input type="radio" name="paiement" value="carte"> Carte<br>
-  <br>
-  <button type="submit">Enregistrer l'achat</button>
-</form>
+{% extends "base.html" %}
+
+{% block title %}Achat de café - Cafèt{% endblock %}
+{% block header %}Achat de café{% endblock %}
+{% block subtitle %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="quantite">Quantité achetée (kg) :</label>
+            <input type="number" name="quantite" id="quantite" step="0.01" min="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="prix">Prix payé (€) :</label>
+            <input type="number" name="prix" id="prix" step="0.01" min="0.01" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Moyen de paiement :</label>
+            <div style="margin-top: 10px;">
+                <label style="display: block; margin: 8px 0; cursor: pointer;">
+                    <input type="radio" name="paiement" value="liquide" required style="margin-right: 8px;">
+                    💵 Liquide
+                </label>
+                <label style="display: block; margin: 8px 0; cursor: pointer;">
+                    <input type="radio" name="paiement" value="carte" style="margin-right: 8px;">
+                    💳 Carte
+                </label>
+            </div>
+        </div>
+        
+        <button type="submit" class="button">
+            <span class="button-icon">🛒</span>Enregistrer l'achat
+        </button>
+    </form>
+    
+    <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
+</div>
+{% endblock %}

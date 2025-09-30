@@ -1,82 +1,158 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>Liste des dettes</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            padding: 20px;
-        }
-        h1 {
-            margin-bottom: 20px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .positif {
-            color: red;
-        }
-        .negatif {
-            color: green;
-        }
-        .neutre {
-            color : grey;
-        }
-        .bouton {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .bouton:hover {
-            background-color: #2980b9;
-        }
-    </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-    <h1>Liste des dettes</h1>
+{% block title %}Liste des dettes - Cafèt{% endblock %}
+{% block header %}Liste des dettes{% endblock %}
+{% block subtitle %}{% endblock %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Statut</th>
-                <th>Dette (€)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for infos in personnes %}
-            <tr>
-                <td>{{ infos['nom'] }}</td>
-                <td>{{ infos['prenom'] }}</td>
-                <td>{{ infos['statut'] }}</td>
-                <td class="{{ 'negatif' if infos['dette'] <= 0  else 'positif' }}">
-                    {{ '%.2f'|format(infos['dette']) }} €
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block content %}
+<div class="form-container">
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+    
+    <div class="table-container">
+        <table class="dettes-table" id="tableDettes">
+            <thead>
+                <tr>
+                    <th class="sortable" data-sort="nom">
+                        Nom <span class="sort-indicator">↕</span>
+                    </th>
+                    <th class="sortable" data-sort="prenom">
+                        Prénom <span class="sort-indicator">↕</span>
+                    </th>
+                    <th class="sortable" data-sort="statut">
+                        Statut <span class="sort-indicator">↕</span>
+                    </th>
+                    <th class="sortable" data-sort="dette">
+                        Dette (€) <span class="sort-indicator">↓</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for infos in personnes %}
+                <tr>
+                    <td data-nom="{{ infos['nom']|lower }}">{{ infos['nom'] }}</td>
+                    <td data-prenom="{{ infos['prenom']|lower }}">{{ infos['prenom'] }}</td>
+                    <td data-statut="{{ infos['statut']|lower }}">
+                        <span class="statut-badge statut-{{ infos['statut'] }}">
+                            {{ infos['statut'] }}
+                        </span>
+                    </td>
+                    <td class="{{ 'dette-negatif' if infos['dette'] <= 0 else 'dette-positif' }}" data-dette="{{ infos['dette'] }}">
+                        {{ '%.2f'|format(infos['dette']) }} €
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" style="text-align: right; font-weight: bold;">Total des dettes :</td>
+                    <td class="dette-total" id="totalDettes">
+                        {{ '%0.2f'|format(personnes|sum(attribute='dette')) }} €
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
 
-    <form action="{{ url_for('exporter_pdf') }}" method="get">
-        <button class="bouton">📄 Générer le PDF</button>
-    </form>
-    <a href="{{ url_for('index') }}">Retour</a>
-</body>
-</html>
+    <div style="margin-top: 30px; text-align: center;">
+        <a href="{{ url_for('exporter_pdf') }}" class="button" style="display: inline-block; width: auto; padding: 12px 30px;">
+            <span class="button-icon">📄</span>Générer le PDF
+        </a>
+    </div>
+    
+    <a href="{{ url_for('index') }}" class="back-link">← Retour à l'accueil</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const table = document.getElementById('tableDettes');
+    const sortableHeaders = document.querySelectorAll('.sortable');
+    let currentSort = { column: 'dette', direction: -1 }; // Par défaut trié par dette décroissante
+
+    // Initialiser les indicateurs
+    updateSortIndicators();
+
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const column = this.getAttribute('data-sort');
+            
+            // Si on clique sur la même colonne, inverser la direction
+            if (currentSort.column === column) {
+                currentSort.direction *= -1;
+            } else {
+                // Sinon, trier par cette colonne en ordre croissant par défaut
+                currentSort.column = column;
+                currentSort.direction = 1;
+            }
+            
+            // Trier le tableau
+            sortTable(column, currentSort.direction);
+            
+            // Mettre à jour les indicateurs visuels
+            updateSortIndicators();
+        });
+    });
+    
+    function sortTable(column, direction) {
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        rows.sort((a, b) => {
+            let valueA, valueB;
+            
+            switch(column) {
+                case 'nom':
+                    valueA = a.querySelector('td[data-nom]').getAttribute('data-nom');
+                    valueB = b.querySelector('td[data-nom]').getAttribute('data-nom');
+                    break;
+                case 'prenom':
+                    valueA = a.querySelector('td[data-prenom]').getAttribute('data-prenom');
+                    valueB = b.querySelector('td[data-prenom]').getAttribute('data-prenom');
+                    break;
+                case 'statut':
+                    valueA = a.querySelector('td[data-statut]').getAttribute('data-statut');
+                    valueB = b.querySelector('td[data-statut]').getAttribute('data-statut');
+                    break;
+                case 'dette':
+                    valueA = parseFloat(a.querySelector('td[data-dette]').getAttribute('data-dette'));
+                    valueB = parseFloat(b.querySelector('td[data-dette]').getAttribute('data-dette'));
+                    break;
+            }
+            
+            // Comparaison selon le type de données
+            if (column === 'dette') {
+                return (valueA - valueB) * direction;
+            } else {
+                if (valueA < valueB) return -1 * direction;
+                if (valueA > valueB) return 1 * direction;
+                return 0;
+            }
+        });
+        
+        // Réinsérer les lignes triées
+        rows.forEach(row => tbody.appendChild(row));
+    }
+    
+    function updateSortIndicators() {
+        // Réinitialiser tous les indicateurs
+        sortableHeaders.forEach(header => {
+            const indicator = header.querySelector('.sort-indicator');
+            indicator.textContent = '↕';
+            indicator.style.opacity = '0.5';
+        });
+        
+        // Mettre à jour l'indicateur de la colonne active
+        const activeHeader = document.querySelector(`.sortable[data-sort="${currentSort.column}"]`);
+        if (activeHeader) {
+            const activeIndicator = activeHeader.querySelector('.sort-indicator');
+            activeIndicator.textContent = currentSort.direction === 1 ? '↑' : '↓';
+            activeIndicator.style.opacity = '1';
+        }
+    }
+    
+    // Trier initialement par dette décroissante
+    sortTable('dette', -1);
+});
+</script>
+{% endblock %}
