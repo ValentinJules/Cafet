@@ -6,9 +6,10 @@ from flask import send_file
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
 import io
+from reportlab.lib.utils import ImageReader
 
 app = Flask(__name__)
-prix_par_cafe = 0.30
+# prix_par_cafe = 0.30
 
 
 FICHIER_JSON = "./conso.json"
@@ -471,6 +472,101 @@ def changer_prix():
                 return render_template("changer_prix.html", error="Veuillez entrer un prix valide")
     
     return render_template("changer_prix.html", prix_actuel=donnees_caisse["prix_par_cafe"])
+
+@app.route("/exporter_grille_pdf")
+def exporter_grille_pdf():
+    data = charger_donnees()
+    personnes = data.get("personnes", [])
+    
+    # Filtrer les personnes actives
+    personnes_actives = [p for p in personnes if p.get("statut") != "inactif"]
+    personnes_triees = sorted(personnes_actives, key=lambda x: x["nom"])
+    
+    buffer = io.BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+    
+    # Configuration
+    y = height - 50
+    line_height = 15
+    nom_col_width = 80
+    prenom_col_width = 80
+    case_width = 15
+    nb_cases_ligne = 20  # 20 cases par ligne
+    
+    # Titre
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(50, y, "Grille des consommations de café")
+    p.setFont("Helvetica", 10)
+    p.drawString(50, y - 20, f"Export du {datetime.now().strftime('%d/%m/%Y')}")
+    p.drawString(50, y - 35, "Prix: 0,30€ (0,15€ pour stagiaires)")
+    
+    y -= 60
+    
+    # En-têtes des colonnes
+    p.setFont("Helvetica-Bold", 10)
+    p.drawString(50, y, "Nom")
+    p.drawString(140, y, "Prénom")
+    p.drawString(230, y, "Cases à cocher")
+    
+    y -= 25
+    
+    # Ligne de séparation
+    p.line(50, y, 50 + nom_col_width + prenom_col_width + (nb_cases_ligne * case_width), y)
+    y -= 10
+    
+    # Données des personnes
+    p.setFont("Helvetica", 9)
+    
+    for personne in personnes_triees:
+        # Vérifier si on doit changer de page
+        if y < 80:  # Plus d'espace nécessaire pour 2 lignes
+            p.showPage()
+            y = height - 50
+            
+            # Redessiner les en-têtes
+            p.setFont("Helvetica-Bold", 10)
+            p.drawString(50, y, "Nom")
+            p.drawString(140, y, "Prénom")
+            p.drawString(230, y, "Cases à cocher")
+            
+            y -= 25
+            p.line(50, y, 50 + nom_col_width + prenom_col_width + (nb_cases_ligne * case_width), y)
+            y -= 10
+            p.setFont("Helvetica", 9)
+        
+        # Ligne 1 - Nom + première ligne de cases
+        p.drawString(55, y - 10, personne["nom"])
+        
+        # Cases de la ligne 1
+        for i in range(nb_cases_ligne):
+            x_pos = 230 + (i * case_width)
+            p.rect(x_pos, y - 12, case_width, line_height)
+        
+        y -= line_height
+        
+        # Ligne 2 - Prénom + deuxième ligne de cases
+        p.drawString(55, y - 10, personne["prenom"])
+        
+        # Cases de la ligne 2
+        for i in range(nb_cases_ligne):
+            x_pos = 230 + (i * case_width)
+            p.rect(x_pos, y - 12, case_width, line_height)
+        
+        y -= line_height + 10  # Espacement entre les personnes
+    
+
+    
+    p.save()
+    buffer.seek(0)
+    
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f"grille_cafe_{datetime.now().strftime('%d_%m_%Y')}.pdf",
+        mimetype="application/pdf"
+    )
+
 
 
 
